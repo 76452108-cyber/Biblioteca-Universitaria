@@ -26,6 +26,9 @@ void menucola(){
 void menudevolucion(){
     cout<<"1. Registrar devolucion"<<endl;
     cout<<"2. Mostrar devoluciones"<<endl;
+    cout<<"3. Buscar devolucion"<<endl;
+    cout<<"4. Contar devoluciones"<<endl;
+    cout<<"5. Eliminar ultima devolucion"<<endl;
     cout<<"0. Atras"<<endl;
 }
 
@@ -123,9 +126,95 @@ struct devolucion{
 	devolucion *sig;
 };
 
+// ===== PILA DE DEVOLUCIONES - FUNCIONES STACK =====
+// Registrar devolución (push)
+void registrar(devolucion *&pila, string libro){
+
+    devolucion *nuevo = new devolucion;
+
+    nuevo->libro = libro;
+    nuevo->sig = pila;
+
+    pila = nuevo;
+}
+
+// Mostrar todas las devoluciones
+void mostrarDevoluciones(devolucion *pila){
+
+    if(pila == NULL){
+        cout << "No hay devoluciones registradas" << endl;
+        return;
+    }
+
+    while(pila != NULL){
+        cout << "- " << pila->libro << endl;
+        pila = pila->sig;
+    }
+
+    cout << endl;
+}
+
+// Buscar libro en devoluciones
+bool buscarDevolucion(devolucion *pila, string libro){
+
+    while(pila != NULL){
+
+        if(pila->libro == libro){
+            return true;
+        }
+
+        pila = pila->sig;
+    }
+
+    return false;
+}
+
+// Contar total de devoluciones
+int contarDevoluciones(devolucion *pila){
+
+    int contador = 0;
+
+    while(pila != NULL){
+
+        contador++;
+
+        pila = pila->sig;
+    }
+
+    return contador;
+}
+
+// Eliminar última devolución (pop)
+void eliminarDevolucion(devolucion *&pila){
+
+    if(pila == NULL){
+        cout << "No hay devoluciones para eliminar" << endl;
+        return;
+    }
+
+    devolucion *aux = pila;
+    cout << "Eliminando devolucion: " << aux->libro << endl;
+
+    pila = pila->sig;
+
+    delete aux;
+}
+
+// Mostrar última devolución registrada
+void mostrarUltimo(devolucion *pila){
+
+    if(pila == NULL){
+        cout << "No hay devoluciones" << endl;
+        return;
+    }
+
+    cout << "Ultima devolucion registrada: " << pila->libro << endl;
+}
 
 int main(){
 	Libro *lista = NULL;
+	devolucion *pila = NULL;
+	
 	//MENU GLOBAL
     int op;
     int subop;
@@ -193,19 +282,45 @@ int main(){
                 menudevolucion();
                 cout<<"Ingrese opcion: ";
                 cin>>subop;
+                
+                switch(subop){
+                    case 1:{
+                        string libro;
+                        cin.ignore();
+                        cout<<"Ingrese nombre del libro a devolver: ";
+                        getline(cin, libro);
+                        registrar(pila, libro);
+                        cout<<"Devolucion registrada.\n";
+                        break;
+                    }
+                    case 2:{
+                        cout<<"\nDEVOLUCIONES REGISTRADAS:\n";
+                        mostrarDevoluciones(pila);
+                        break;
+                    }
+                    case 3:{
+                        string libro;
+                        cin.ignore();
+                        cout<<"Ingrese nombre del libro a buscar: ";
+                        getline(cin, libro);
+                        if(buscarDevolucion(pila, libro))
+                            cout<<"Devolucion encontrada.\n";
+                        else
+                            cout<<"Devolucion no encontrada.\n";
+                        break;
+                    }
+                    case 4:{
+                        cout<<"Total de devoluciones: "<<contarDevoluciones(pila)<<endl;
+                        break;
+                    }
+                    case 5:{
+                        eliminarDevolucion(pila);
+                        break;
+                    }
+                }
             }while(subop!=0);
             break;
         }
     }while (op!=0);
     return 0;
 }
-	
-	//lista enlazada
-	
-	
-	//cola
-	//estudiante *frente = NULL;
-	//estudiante *anterior = NULL;
-	
-	//pila
-	//devolucion *tope = NULL;
