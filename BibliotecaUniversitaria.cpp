@@ -26,6 +26,7 @@ void menucola(){
 void menudevolucion(){
     cout<<"1. Registrar devolucion"<<endl;
     cout<<"2. Mostrar devoluciones"<<endl;
+    cout<<"3. Extraer ultima devolucion"<<endl;
     cout<<"0. Atras"<<endl;
 }
 
@@ -327,6 +328,10 @@ int main(){
 					}
 					case 2:{
 						mostrarDevoluciones(tope);
+						break;
+					}
+					case 3:{
+						extraerDevolucion(tope);
 						break;
 					}
 				}
