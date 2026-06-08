@@ -89,7 +89,7 @@ void buscarlibro(Libro *lista, string titulo){
     cout<<"Libro no encontrado\n";
 }
 
-void eliminarlibro(Libro *lista, int id){
+void eliminarlibro(Libro *&lista, int id){
 	Libro *aux = lista;
 	Libro *anterior = NULL;
 	
@@ -97,8 +97,10 @@ void eliminarlibro(Libro *lista, int id){
 		anterior = aux;
 		aux = aux->sig;		
 	}
-	if (aux == NULL)
+	if (aux == NULL){
+		cout<<"Libro no encontrado\n";
 		return;
+	}
 	
 	if(anterior == NULL)
 		lista = aux->sig;
@@ -106,6 +108,7 @@ void eliminarlibro(Libro *lista, int id){
 		anterior->sig = aux->sig;
 		
 	delete aux;
+	cout<<"Libro eliminado correctamente\n";
 }
 
 //struct para colas (insertar, mostrar, buscar y borrar)
@@ -115,6 +118,51 @@ struct estudiante{
 	estudiante *sig;
 	
 };
+
+//FUNCIONES PARA COLA
+void insertarEstudiante(estudiante *&frente, estudiante *&final, string nombre){
+	estudiante *nuevo = new estudiante;
+	nuevo->nombre = nombre;
+	nuevo->sig = NULL;
+	
+	if(frente == NULL){
+		frente = nuevo;
+	}else{
+		final->sig = nuevo;
+	}
+	final = nuevo;
+}
+
+void atenderEstudiante(estudiante *&frente){
+	if(frente == NULL){
+		cout<<"No hay estudiantes en la cola\n";
+		return;
+	}
+	
+	estudiante *aux = frente;
+	cout<<"Estudiante atendido: "<<frente->nombre<<endl;
+	frente = frente->sig;
+	delete aux;
+}
+
+void mostrarCola(estudiante *frente){
+	estudiante *aux = frente;
+	
+	cout<<"\nCOLA DE ESTUDIANTES\n\n";
+	
+	if(frente == NULL){
+		cout<<"La cola esta vacia\n";
+		return;
+	}
+	
+	while(aux != NULL){
+		cout<<"------------------\n";
+		cout<<"Estudiante: "<<aux->nombre<<endl;
+		cout<<"------------------\n";
+		
+		aux = aux->sig;
+	}
+}
 
 //struct para pilas (insertar, mostrar, buscar y borrar)
 struct devolucion{
@@ -170,6 +218,8 @@ void vaciarPila(devolucion *&tope){
 
 int main(){
 	Libro *lista = NULL;
+	estudiante *frente = NULL;
+	estudiante *final = NULL;
 	devolucion *tope = NULL;
 	
 	//MENU GLOBAL
@@ -223,6 +273,13 @@ int main(){
     				buscarlibro(lista, titulo);
     				break;
 				}
+				case 4:{
+					int id;
+					cout<<"Ingrese el ID del libro a eliminar: ";
+					cin>>id;
+					eliminarlibro(lista, id);
+					break;
+				}
 			}
             
             }while (subop!=0);
@@ -232,6 +289,25 @@ int main(){
                 menucola();
                 cout<<"Ingrese opcion: ";
                 cin>>subop;
+                switch(subop){
+                	case 1:{
+                		string nombre;
+                		cin.ignore();
+                		cout<<"Ingrese nombre del estudiante: ";
+                		getline(cin, nombre);
+                		insertarEstudiante(frente, final, nombre);
+                		cout<<"Estudiante agregado a la cola\n";
+                		break;
+					}
+					case 2:{
+						atenderEstudiante(frente);
+						break;
+					}
+					case 3:{
+						mostrarCola(frente);
+						break;
+					}
+				}
             }while(subop!=0);
             break;
         case 3:
