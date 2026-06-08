@@ -1,3 +1,6 @@
+include <iostream>
+using namespace std;
+
 //estructura de la cola
 struct estudiante{
     string nombre;
